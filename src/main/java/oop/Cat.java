@@ -8,6 +8,7 @@ public class Cat {
     public void giveNick(String nick) {
         this.name = nick;
     }
+
     public void show() {
         System.out.println("Cat name: " + this.name + " Cat food:" + this.food);
     }
