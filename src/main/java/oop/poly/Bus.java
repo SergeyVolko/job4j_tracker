@@ -1,6 +1,6 @@
 package oop.poly;
 
-public class Bus implements Transport{
+public class Bus implements Transport {
     @Override
     public void drive() {
         System.out.println("Мы едем.");
