@@ -1,6 +1,6 @@
 package oop.poly;
 
-public class Bus implements Transport {
+public class Bus implements Transport, Vehicle {
     @Override
     public void drive() {
         System.out.println("Мы едем.");
@@ -14,5 +14,10 @@ public class Bus implements Transport {
     @Override
     public double refuel(double fuel) {
         return fuel * 50;
+    }
+
+    @Override
+    public void move() {
+        System.out.println("Автобус едет по дороге.");
     }
 }
