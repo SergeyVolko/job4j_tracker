@@ -2,7 +2,7 @@ package oop.ex;
 
 public class FactRec {
     public static int calc(int n) {
-        if (n == 1) {
+        if (n == 0 || n == 1) {
             return 1;
         }
         return calc(n - 1) * n;
