@@ -13,16 +13,4 @@ public final class SingleTracker {
         }
         return tracker;
     }
-
-    public Item[] findByName(String key) {
-        return tracker.findByName(key);
-    }
-
-    public boolean replace(int id, Item item) {
-        return tracker.replace(id, item);
-    }
-
-    public boolean delete(int id) {
-        return tracker.delete(id);
-    }
 }
