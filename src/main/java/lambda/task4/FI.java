@@ -21,8 +21,8 @@ public class FI {
         /**
          * Решение описать текстом.
          */
-        Comparator<String> stringComparatorNatural = (left, right) -> left.compareTo(right);
-        Comparator<String> stringComparatorRevers = (left, right) -> right.compareTo(left);
+        Comparator<String> cmpText  = (left, right) -> left.compareTo(right);
+        Comparator<String> cmpDescSize  = (left, right) -> Integer.compare(right.length(), left.length());
     }
 }
 
