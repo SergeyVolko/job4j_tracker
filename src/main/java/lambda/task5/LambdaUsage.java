@@ -1,6 +1,7 @@
 package lambda.task5;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class LambdaUsage {
     public static void main(String[] args) {
@@ -11,10 +12,11 @@ public class LambdaUsage {
                 "five",
                 "four"
         };
-        System.out.println(Arrays.toString(strings));
+        Comparator<String> cmpDescSize  = (left, right) ->
+                Integer.compare(right.length(), left.length());
         Arrays.sort(strings, (left, right) -> {
             System.out.println(left + ":" + right);
-            return right.compareTo(left);
+            return cmpDescSize.compare(left, right);
         });
         System.out.println(Arrays.toString(strings));
     }
