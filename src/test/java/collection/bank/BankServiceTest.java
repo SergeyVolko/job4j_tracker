@@ -43,5 +43,33 @@ public class BankServiceTest {
         bank.transferMoney(user.getPassport(), "5546", user.getPassport(), "113", 150D);
         assertThat(bank.findByRequisite(user.getPassport(), "113").getBalance(), is(200D));
     }
+
+    @Test
+    public void testFindByPassport() {
+        BankService bank = new BankService();
+        bank.addUser(new User("1111", "Ivan"));
+        bank.addAccount("1111", new Account("0000", 100));
+        bank.addAccount("1111", new Account("0001", 200));
+        bank.addUser(new User("2222", "Petr"));
+        bank.addAccount("2222", new Account("0002", 100));
+        bank.addAccount("2222", new Account("0003", 200));
+        String expected = "2222";
+        String result = bank.findByPassport("2222").getPassport();
+        assertThat(expected, is(result));
+    }
+
+    @Test
+    public void testFindByRequisite() {
+        BankService bank = new BankService();
+        bank.addUser(new User("1111", "Ivan"));
+        bank.addAccount("1111", new Account("0000", 100));
+        bank.addAccount("1111", new Account("0001", 200));
+        bank.addUser(new User("2222", "Petr"));
+        bank.addAccount("2222", new Account("0002", 100));
+        bank.addAccount("2222", new Account("0003", 200));
+        Account expected = new Account("0002", 100);
+        Account result = bank.findByRequisite("2222", "0002");
+        assertThat(expected, is(result));
+    }
 }
 
