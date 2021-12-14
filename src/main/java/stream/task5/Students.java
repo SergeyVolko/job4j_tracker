@@ -9,10 +9,10 @@ import java.util.stream.Collectors;
 public class Students {
     public static Map<String, Student> collectMap(List<Student> students) {
         return students.stream()
-                .distinct()
                 .collect(Collectors.toMap(
                         Student::getSurname,
-                        e -> e
+                        e -> e,
+                        (v1, v2) -> v1
                 ));
     }
 }
