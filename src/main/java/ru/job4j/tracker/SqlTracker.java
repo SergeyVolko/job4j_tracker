@@ -36,14 +36,18 @@ public class SqlTracker implements Store, AutoCloseable {
     @Override
     public Item add(Item item)  {
         try (PreparedStatement statement =
-                     cn.prepareStatement("insert into items(name, created) values (?, ?)")) {
+                     cn.prepareStatement("insert into items(name, created) values (?, ?)",
+                             Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, item.getName());
             statement.setTimestamp(2, Timestamp.valueOf(item.getCreated()));
             statement.execute();
+            ResultSet generatedKey = statement.getGeneratedKeys();
+            if (generatedKey.next()) {
+                item.setId(generatedKey.getInt(1));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        item.setId(getLastId());
         return item;
     }
 
@@ -82,11 +86,7 @@ public class SqlTracker implements Store, AutoCloseable {
             ResultSet resultSet = statement.executeQuery();
             Item item;
             while (resultSet.next()) {
-                item = new Item(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getTimestamp("created").toLocalDateTime()
-                );
+                item = getItemToResult(resultSet);
                 list.add(item);
             }
         } catch (Exception e) {
@@ -104,11 +104,7 @@ public class SqlTracker implements Store, AutoCloseable {
             ResultSet resultSet = statement.executeQuery();
             Item item;
             while (resultSet.next()) {
-                item = new Item(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getTimestamp("created").toLocalDateTime()
-                );
+                item = getItemToResult(resultSet);
                 list.add(item);
             }
         } catch (Exception e) {
@@ -125,11 +121,7 @@ public class SqlTracker implements Store, AutoCloseable {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                item = new Item(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getTimestamp("created").toLocalDateTime()
-                );
+                item = getItemToResult(resultSet);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -137,24 +129,19 @@ public class SqlTracker implements Store, AutoCloseable {
         return item;
     }
 
-    public int getLastId() {
-        int result = 0;
-        try (PreparedStatement statement = cn.prepareStatement("select max(id) from items")) {
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                result = resultSet.getInt(1);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
+    public Item getItemToResult(ResultSet resultSet) throws Exception {
+        return new Item(
+                resultSet.getInt("id"),
+                resultSet.getString("name"),
+                resultSet.getTimestamp("created").toLocalDateTime()
+        );
     }
 
     public static void main(String[] args) {
         SqlTracker sqlTracker = new SqlTracker();
         sqlTracker.init();
-        List<Item> list = sqlTracker.findAll();
-        list.forEach(System.out::println);
-        System.out.println(sqlTracker.findById(sqlTracker.getLastId()));
+        Item testItem = new Item("Test item");
+        sqlTracker.add(testItem);
+        System.out.println(testItem);
     }
 }
