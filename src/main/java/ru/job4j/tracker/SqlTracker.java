@@ -2,6 +2,7 @@ package ru.job4j.tracker;
 
 import java.io.InputStream;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -9,6 +10,14 @@ import java.util.Properties;
 public class SqlTracker implements Store, AutoCloseable {
 
     private Connection cn;
+
+    public SqlTracker() {
+
+    }
+
+    public SqlTracker(Connection cn) {
+        this.cn = cn;
+    }
 
     public void init() {
         try (InputStream in = SqlTracker.class.getClassLoader()
@@ -26,10 +35,6 @@ public class SqlTracker implements Store, AutoCloseable {
         }
     }
 
-    public void setConnection(Connection cn) {
-        this.cn = cn;
-    }
-
     @Override
     public void close() throws Exception {
         if (cn != null) {
@@ -45,9 +50,12 @@ public class SqlTracker implements Store, AutoCloseable {
             statement.setString(1, item.getName());
             statement.setTimestamp(2, Timestamp.valueOf(item.getCreated()));
             statement.execute();
+            int id;
             ResultSet generatedKey = statement.getGeneratedKeys();
             if (generatedKey.next()) {
-                item.setId(generatedKey.getInt(1));
+                id = generatedKey.getInt(1);
+                item.setId(id);
+                item.setCreated(getCreatedToBase(id));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -139,6 +147,21 @@ public class SqlTracker implements Store, AutoCloseable {
                 resultSet.getString("name"),
                 resultSet.getTimestamp("created").toLocalDateTime()
         );
+    }
+
+    public LocalDateTime getCreatedToBase(int id) {
+        LocalDateTime result = null;
+        try (PreparedStatement statement =
+                     cn.prepareStatement("select created  from items where id = ?")) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                result = resultSet.getTimestamp("created").toLocalDateTime();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public static void main(String[] args) {

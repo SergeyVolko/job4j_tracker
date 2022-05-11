@@ -11,11 +11,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Properties;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class SqlTrackerTest {
@@ -54,13 +56,22 @@ public class SqlTrackerTest {
 
     @Test
     public void whenSaveItemAndFindByGeneratedIdThenMustBeTheSame() {
-        SqlTracker tracker = new SqlTracker();
-        tracker.setConnection(connection);
+        SqlTracker tracker = new SqlTracker(connection);
         Item item = new Item("item");
         tracker.add(item);
         System.out.println("first item: " + item);
         System.out.println("second item: " + tracker.findById(item.getId()));
+        Item item1 = tracker.findById(item.getId());
+        System.out.println(item1.equals(item));
+        System.out.println(item1.getCreated().equals(item.getCreated()));
+        LocalDateTime create1 = item1.getCreated();
+        LocalDateTime create2 = item.getCreated();
+        System.out.println(create1.getNano());
+        System.out.println(create2.getNano());
+        //assertEquals(tracker.findById(item.getId()), item);
+
         assertThat(tracker.findById(item.getId()), is(item));
+        //assertThat(tracker.findById(item.getId()).getId(), is(item.getId()));
     }
 
 }
