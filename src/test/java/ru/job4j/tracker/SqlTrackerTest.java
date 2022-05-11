@@ -68,10 +68,7 @@ public class SqlTrackerTest {
         LocalDateTime create2 = item.getCreated();
         System.out.println(create1.getNano());
         System.out.println(create2.getNano());
-        //assertEquals(tracker.findById(item.getId()), item);
-
         assertThat(tracker.findById(item.getId()), is(item));
-        //assertThat(tracker.findById(item.getId()).getId(), is(item.getId()));
     }
 
 }
