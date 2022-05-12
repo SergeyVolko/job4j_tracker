@@ -55,7 +55,6 @@ public class SqlTracker implements Store, AutoCloseable {
             if (generatedKey.next()) {
                 id = generatedKey.getInt(1);
                 item.setId(id);
-                item.setCreated(getCreatedToBase(id));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -141,27 +140,12 @@ public class SqlTracker implements Store, AutoCloseable {
         return item;
     }
 
-    public Item getItemToResult(ResultSet resultSet) throws Exception {
+    private Item getItemToResult(ResultSet resultSet) throws Exception {
         return new Item(
                 resultSet.getInt("id"),
                 resultSet.getString("name"),
                 resultSet.getTimestamp("created").toLocalDateTime()
         );
-    }
-
-    public LocalDateTime getCreatedToBase(int id) {
-        LocalDateTime result = null;
-        try (PreparedStatement statement =
-                     cn.prepareStatement("select created  from items where id = ?")) {
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                result = resultSet.getTimestamp("created").toLocalDateTime();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 
     public static void main(String[] args) {

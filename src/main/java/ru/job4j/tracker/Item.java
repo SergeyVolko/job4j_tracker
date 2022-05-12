@@ -50,10 +50,6 @@ public class Item {
         return created;
     }
 
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
-    }
-
     @Override
     public String toString() {
         return "Item{"
@@ -72,12 +68,11 @@ public class Item {
             return false;
         }
         Item item = (Item) o;
-        return id == item.id && Objects.equals(name, item.name)
-                && Objects.equals(created, item.created);
+        return id == item.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, created);
+        return Objects.hash(id);
     }
 }
