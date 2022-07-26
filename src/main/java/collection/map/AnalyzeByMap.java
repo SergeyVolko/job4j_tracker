@@ -74,13 +74,12 @@ public class AnalyzeByMap {
         for (Pupil pupil : pupils) {
             for (Subject subject : pupil.subjects()) {
                 name = subject.name();
-                if (map.containsKey(name)) {
-                    map.get(name).add(subject);
-                } else {
-                    List<Subject> list = new ArrayList<>();
-                    list.add(subject);
-                    map.put(name, list);
-                }
+                List<Subject> list = new ArrayList<>();
+                list.add(subject);
+                map.merge(name, list, (e1, e2) -> {
+                    e1.addAll(e2);
+                    return e1;
+                });
             }
         }
         return map;
