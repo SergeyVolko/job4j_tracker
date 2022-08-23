@@ -12,27 +12,23 @@ public class PasswordValidator {
         if (password == null) {
             throw new IllegalArgumentException("Argument is null.");
         }
+        String result = "Validation was successful.";
         if (password.length() < 8 || password.length() > 32) {
-            return "The password length is not in the range [8, 32]";
-        }
-        if (validatePassword(password, Character::isUpperCase)) {
-            return "The password does not contain at least one uppercase character.";
-        }
-        if (validatePassword(password, Character::isLowerCase)) {
-            return "The password does not contain at least one lowercase character.";
-        }
-        if (validatePassword(password, Character::isDigit)) {
-            return "The password does not contain at least one digit.";
-        }
-        if (validatePassword(password,
+            result = "The password length is not in the range [8, 32]";
+        } else if (validatePassword(password, Character::isUpperCase)) {
+            result = "The password does not contain at least one uppercase character.";
+        } else if (validatePassword(password, Character::isLowerCase)) {
+            result = "The password does not contain at least one lowercase character.";
+        } else if (validatePassword(password, Character::isDigit)) {
+            result = "The password does not contain at least one digit.";
+        } else if (validatePassword(password,
                 ch -> !Character.isDigit(ch) && !Character.isAlphabetic(ch))) {
-            return "The password does not contain at least one special character (not a number or a"
+            result = "The password does not contain at least one special character (not a number or a"
                     + " letter).";
+        } else if (validateContain(password.toLowerCase())) {
+            result = "The password contains forbidden substrings.";
         }
-        if (validateContain(password.toLowerCase())) {
-            return "The password contains forbidden substrings.";
-        }
-        return "Validation was successful.";
+        return result;
     }
 
     private static boolean validatePassword(String password, Predicate<Character> predicate) {
