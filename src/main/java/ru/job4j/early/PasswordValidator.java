@@ -16,15 +16,17 @@ public class PasswordValidator {
         if (password.length() < 8 || password.length() > 32) {
             result = "The password length is not in the range [8, 32]";
         } else if (validatePassword(password, Character::isUpperCase)) {
-            result = "The password does not contain at least one uppercase character.";
+            result = "The password does not contain at least "
+                    + "one uppercase character.";
         } else if (validatePassword(password, Character::isLowerCase)) {
-            result = "The password does not contain at least one lowercase character.";
+            result = "The password does not contain at "
+                    + "least one lowercase character.";
         } else if (validatePassword(password, Character::isDigit)) {
             result = "The password does not contain at least one digit.";
         } else if (validatePassword(password,
                 ch -> !Character.isDigit(ch) && !Character.isAlphabetic(ch))) {
-            result = "The password does not contain at least one special character (not a number or a"
-                    + " letter).";
+            result = "The password does not contain at least one special "
+                    + "character (not a number or a letter).";
         } else if (validateContain(password.toLowerCase())) {
             result = "The password contains forbidden substrings.";
         }
