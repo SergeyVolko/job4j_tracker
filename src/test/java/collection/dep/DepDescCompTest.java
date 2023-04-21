@@ -1,10 +1,7 @@
 package collection.dep;
 
-import org.junit.Test;
-
-import static org.hamcrest.Matchers.lessThan;
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.greaterThan;
+import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DepDescCompTest {
 
@@ -14,7 +11,7 @@ public class DepDescCompTest {
                 "K2/SK1/SSK2",
                 "K2/SK1/SSK1"
         );
-        assertThat(rsl, greaterThan(0));
+        assertThat(rsl).isGreaterThan(0);
     }
 
     @Test
@@ -23,7 +20,24 @@ public class DepDescCompTest {
                 "K2",
                 "K2/SK1"
         );
-        assertThat(rsl, lessThan(0));
+        assertThat(rsl).isLessThan(0);
     }
 
+    @Test
+    public void whenFirstDepartmentIsDifferentThenAsc() {
+        int rsl = new DepDescComp().compare(
+                "K2/SK1/SSK1",
+                "K1/SK1/SSK2"
+        );
+        assertThat(rsl).isLessThan(0);
+    }
+
+    @Test
+    public void whenFirstDepartmentIsDifferentThenDesc() {
+        int rsl = new DepDescComp().compare(
+                "K1/SK1/SSK1",
+                "K2/SK1"
+        );
+        assertThat(rsl).isGreaterThan(0);
+    }
 }
