@@ -4,6 +4,7 @@ public class Model {
     private String name;
 
     Model() {
+        this.name = "Default name";
     }
 
     Model(String str) {
